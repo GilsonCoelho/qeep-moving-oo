@@ -147,6 +147,143 @@ public class ProgramaPrincipal {
 		
 	}
 	
+	public static boolean cadastraCoordenador(Scanner teclado, Coordenador[] coordenadores) {
+		
+		teclado.nextLine();
+		System.out.println("Vamos cadastrar o coordenador: ");
+		System.out.println("Digite o nome do coordenador: ");
+		String nome = teclado.nextLine();
+		System.out.println("Digite o CPF do coordenador: ");
+		String cpf = teclado.next();
+		System.out.println("Digite o número de registro do coordenador: ");
+		int nroRegistro = teclado.nextInt();
+		teclado.nextLine();
+		System.out.println("Digite o orgão de lotação: ");
+		String orgaoLotacao = teclado.nextLine();
+		System.out.println("Digite o salário: ");
+		double salario = teclado.nextDouble();
+			
+		Coordenador coordenadorCadastrado = new Coordenador(nome, cpf, nroRegistro, orgaoLotacao, salario);
+	
+		for (int i = 0; i < coordenadores.length; i++) {
+		
+			if (coordenadores[i] == null) {
+				coordenadores[i] = coordenadorCadastrado;
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public static void listaCoordenadores(Coordenador[] coordenadores) {
+		for (Coordenador coordenador : coordenadores) {
+			if (coordenadores != null) {
+				System.out.println(coordenador);
+			}
+		}
+	}
+
+	public static Coordenador buscaCoordenador(Scanner teclado, Coordenador[] coordenadores) {
+		
+		System.out.println("Digite o CPF pelo qual você quer pesquisar: ");
+		String cpfConsultado = teclado.next();
+		for (int i = 0; i < coordenadores.length; i++) {
+			
+			if (coordenadores[i] != null 
+					&& coordenadores[i].getCpf().equals(cpfConsultado)) {
+				return coordenadores[i];
+			}
+			
+		}
+		
+		return null;
+	}
+	
+	public static boolean removeCoordenador(Scanner teclado, Coordenador[] coordenadores) {
+		
+		System.out.println("Digite o CPF pelo qual você quer remover: ");
+		String cpfConsultadoRemocao = teclado.next();
+		
+		for (int i = 0; i < coordenadores.length; i++) {
+			
+			if (coordenadores[i] != null 
+					&& coordenadores[i].getCpf().equals(cpfConsultadoRemocao)) {
+				coordenadores[i] = null;
+				return true;
+			}
+			
+		}
+		
+		return false;
+	}
+	
+	public static void menuCoordenadores(Scanner teclado, Coordenador[] coordenadores) {
+		
+		int opcaoMenuCoordenadores = 0;
+		do {
+			System.out.println("--- Menu de coordenadores ---");
+			System.out.println("1 - Cadastrar um professor");
+			System.out.println("2 - Listar todos os coordenadores");
+			System.out.println("3 - Consultar professor por CPF");
+			System.out.println("4 - Remover um professor");
+			System.out.println("5 - Aumentar o salário");
+			System.out.println("0 - Voltar ao menu anterior");
+			opcaoMenuCoordenadores = teclado.nextInt();
+			
+			switch (opcaoMenuCoordenadores) {
+				case 1: 
+					System.out.println("-- Cadastra coordenador --");
+					if (cadastraCoordenador(teclado, coordenadores)) {
+						System.out.println("Cadastro realizado com sucesso!");
+					} else {
+						System.out.println("Falha ao cadastra coordenador!");
+					}
+					break;
+				case 2:
+					System.out.println("-- Coordenadores Cadastrados --");
+					listaCoordenadores(coordenadores);
+					System.out.println("----");
+					break;
+				case 3:
+					System.out.println("-- Consulta coordenador --");
+					Coordenador coordenadorConsultado = buscaCoordenador(teclado, coordenadores);
+					if ( coordenadorConsultado != null) {
+						System.out.println(coordenadorConsultado);
+					} else {
+						System.out.println("Coordenador não encontrado!");
+					}
+					break;
+				case 4: 
+					System.out.println("-- Remove coordenador --");
+					if (removeCoordenador(teclado, coordenadores)) {
+						System.out.println("Coordenadores removido com sucesso!");
+					} else {
+						System.out.println("Coordenador não encontrado!");
+					}
+					break;
+					
+				case 5:
+					System.out.println("-- Aumento de salário --");
+					Coordenador coordenadorAumento = buscaCoordenador(teclado, coordenadores);
+					if (coordenadorAumento != null) {
+						coordenadorAumento.aumentaSalario();
+						System.out.println("Salário do "  + coordenadorAumento.getNome() + " aumentado com sucesso!");
+					} else {
+						System.out.println("Coordenador não encontrado!");
+					}
+				case 0:
+					System.out.println("Voltando ao menu anterior!");
+					break;
+				default:
+					System.out.println("Menu coordenadores -> Opção inválida");
+			}
+			
+		} while (opcaoMenuCoordenadores != 0);
+		
+		
+	}
+	
 	private static void imprimirFolha(Professor[] professores, Coordenador[] coordenadores,
 			FuncionarioAdministrativo[] funcionariosAdm) {
 		
@@ -224,7 +361,7 @@ public class ProgramaPrincipal {
 					menuProfessores(teclado, professores);
 					break;
 				case 2:
-					//menuCoordenadores();
+					menuCoordenadores(teclado, coordenadores);
 					break;
 				case 3: 
 					//menuFuncionariosAdm();
